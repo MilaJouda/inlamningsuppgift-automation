@@ -9,19 +9,30 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.time.Duration;
 import java.util.Random;
 
 public class stepDefintions {
     WebDriver driver;
-    WebDriverWait wait;
 
     @Given("I am on the registration page")
     public void iAmOnThePage() {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        driver.get("https://membership.basketballengland.co.uk/NewSupporterAccount");
+    }
+
+    @Given("I am on the registration page using {string}")
+    public void iAmOnTheRegistrationPageUsing(String browser) {
+        Object WebDriverManager;
+        if (browser.equalsIgnoreCase("chrome"))
+            driver = new ChromeDriver();
+        else if  (browser.equalsIgnoreCase("firefox"))
+            driver = new FirefoxDriver();
+        driver.manage().window().maximize();
         driver.get("https://membership.basketballengland.co.uk/NewSupporterAccount");
     }
 
@@ -33,7 +44,7 @@ public class stepDefintions {
         Random random = new Random();
         int randomNumber = 1000 + random.nextInt(9000);
         driver.findElement(By.id("member_emailaddress")).sendKeys("testuser" + randomNumber + "@example.com");
-        driver.findElement(By.id("member_confirmemailaddress")).sendKeys("testuser" + randomNumber +"@example.com");
+        driver.findElement(By.id("member_confirmemailaddress")).sendKeys("testuser" + randomNumber + "@example.com");
         driver.findElement(By.id("signupunlicenced_password")).sendKeys("Password123!");
         driver.findElement(By.id("signupunlicenced_confirmpassword")).sendKeys("Password123!");
     }
@@ -45,7 +56,7 @@ public class stepDefintions {
         Random random = new Random();
         int randomNumber = 1000 + random.nextInt(9000);
         driver.findElement(By.id("member_emailaddress")).sendKeys("testuser" + randomNumber + "@example.com");
-        driver.findElement(By.id("member_confirmemailaddress")).sendKeys("testuser" + randomNumber +"@example.com");
+        driver.findElement(By.id("member_confirmemailaddress")).sendKeys("testuser" + randomNumber + "@example.com");
         driver.findElement(By.id("signupunlicenced_password")).sendKeys("Password123!");
         driver.findElement(By.id("signupunlicenced_confirmpassword")).sendKeys("Password123!");
     }
@@ -58,7 +69,7 @@ public class stepDefintions {
         Random random = new Random();
         int randomNumber = 1000 + random.nextInt(9000);
         driver.findElement(By.id("member_emailaddress")).sendKeys("testuser" + randomNumber + "@example.com");
-        driver.findElement(By.id("member_confirmemailaddress")).sendKeys("testuser" + randomNumber +"@example.com");
+        driver.findElement(By.id("member_confirmemailaddress")).sendKeys("testuser" + randomNumber + "@example.com");
         driver.findElement(By.id("signupunlicenced_password")).sendKeys("Password123!");
         driver.findElement(By.id("signupunlicenced_confirmpassword")).sendKeys("Password456!");
     }
@@ -92,19 +103,20 @@ public class stepDefintions {
     @Then("I should see the message \"Last Name is required\"")
     public void verifyLastNameRequiredMessage() {
         WebElement message = driver.findElement(By.cssSelector("span[for='member_lastname']"));
-        assertEquals("Last Name is required",message.getText());
+        assertEquals("Last Name is required", message.getText());
     }
 
     @Then("I should see the message \"Password did not match\"")
     public void iShouldSeeTheMessage() {
         WebElement message = driver.findElement(By.cssSelector("span[for='signupunlicenced_confirmpassword"));
-        assertEquals("Password did not match",message.getText());
+        assertEquals("Password did not match", message.getText());
     }
 
     @Then("I should see the message \"You must confirm that you have read and accepted our Terms and Conditions\"")
     public void verifyTermsNotAcceptedMessage() {
-        WebElement message = driver.findElement(By.cssSelector("#signup_form span span"));
+        WebElement message = waitForElementToBeDisplayed("#signup_form span span");
         assertEquals("You must confirm that you have read and accepted our Terms and Conditions", message.getText().trim());
+
     }
 
     @After
@@ -113,6 +125,9 @@ public class stepDefintions {
             driver.quit();
         }
     }
+
+    private WebElement waitForElementToBeDisplayed(String css) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(css)));
+    }
 }
-
-
