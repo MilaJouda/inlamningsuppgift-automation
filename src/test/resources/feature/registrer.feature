@@ -38,17 +38,21 @@ Feature: user Registration
 
   Scenario Outline: Registration on Different Browsers
     Given   I am on the registration page using "<browser>"
-    When    I fill in all required member details fields correctly
+    When    I fill in the form with <birthDate>, <firstName>, <lastName>, <password>, <confirmPassword>
     And     I accept the terms and conditions
     And     I confirm I am aged over 18
     And     I agree on the code of ethics
     And     I click "CONFIRM AND JOIN"
     Then    I should see the message "THANK YOU FOR CREATING AN ACCOUNT WITH BASKETBALL ENGLAND"
 
+    Examples:
+      | browser | birthDate  | firstName | lastName | password     | confirmPassword |
+      | chrome  | 01/01/1990 | Test      | User     | Password123! | Password123!    |
+      | firefox | 01/01/1990 | Test      | User     | Password123! | Password123!    |
+      | chrome  | 12/12/1982 | Web       | Driver   | Password321! | Password321!    |
+      | firefox | 12/12/1982 | Web       | Driver   | Password321! | Password321!    |
 
-        Examples:
-          | browser |
-          | chrome  |
-          | firefox |
+
+
 
 

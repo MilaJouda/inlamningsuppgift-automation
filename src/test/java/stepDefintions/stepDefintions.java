@@ -49,6 +49,19 @@ public class stepDefintions {
         driver.findElement(By.id("signupunlicenced_confirmpassword")).sendKeys("Password123!");
     }
 
+    @When("I fill in the form with {}, {}, {}, {}, {}")
+    public void iFillInTheFormWith(String arg0, String arg1, String arg2, String arg3, String arg4) {
+        driver.findElement(By.cssSelector("#dp")).sendKeys(arg0);
+        driver.findElement(By.cssSelector("#member_firstname")).sendKeys(arg1);
+        driver.findElement(By.cssSelector("#member_lastname")).sendKeys(arg2);
+        Random random = new Random();
+        int randomNumber = 1000 + random.nextInt(9000);
+        driver.findElement(By.id("member_emailaddress")).sendKeys("testuser" + randomNumber + "@example.com");
+        driver.findElement(By.id("member_confirmemailaddress")).sendKeys("testuser" + randomNumber + "@example.com");
+        driver.findElement(By.id("signupunlicenced_password")).sendKeys(arg3);
+        driver.findElement(By.id("signupunlicenced_confirmpassword")).sendKeys(arg4);
+    }
+
     @When("I fill in all required member details fields correctly except last name")
     public void iFillInTheFieldsWithoutALastName() {
         driver.findElement(By.cssSelector("#dp")).sendKeys("01/01/1990");
